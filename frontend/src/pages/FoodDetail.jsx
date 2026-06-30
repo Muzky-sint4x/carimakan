@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 import {
     Loader2, ArrowLeft, ShoppingBag, PlayCircle,
     ChefHat, ListChecks, MapPin, Tag, Clock, Users, CheckCircle2
 } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Terjemahan kategori makanan
 const categoryTranslations = {
