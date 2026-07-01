@@ -8,6 +8,7 @@ import FoodDetail from './pages/FoodDetail';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import BillPage from "./pages/BillPage";
+import Checkout from "./pages/Checkout";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/detail/:id" element={<FoodDetail />} />
               <Route path="/keranjang" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/profil" element={<Profile />} />
               <Route path="/karcis/:id" element={<BillPage />} />
             </Routes>

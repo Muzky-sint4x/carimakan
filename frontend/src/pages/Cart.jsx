@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import { ShoppingBag, Trash2, Plus, Minus, ArrowLeft, ShoppingCart } from "lucide-react";
 
 const Cart = () => {
-  const { cart, addToCart, removeFromCart, decreaseQty, clearCart, cartCount } = useCart();
+  const { cart, addToCart, removeFromCart, decreaseQty } = useCart();
   const navigate = useNavigate();
 
   const totalHarga = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -13,11 +13,6 @@ const Cart = () => {
     currency: "IDR",
     maximumFractionDigits: 0,
   }).format(totalHarga);
-
-  const handleCheckout = () => {
-    navigate(`/karcis/${Date.now()}`, { state: { orderedItems: cart, totalHarga, formattedTotal } });
-    clearCart();
-  };
 
   // ✅ Jika keranjang kosong
   if (cart.length === 0) {
@@ -45,7 +40,7 @@ const Cart = () => {
 
   // ✅ Tampilan keranjang
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Daftar Item */}
         <div className="lg:col-span-2 space-y-4">
@@ -117,10 +112,7 @@ const Cart = () => {
 
         {/* Ringkasan Pembayaran */}
         <div className="lg:col-span-1">
-          <div
-            id="bill-section"
-            className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sticky top-24"
-          >
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sticky top-24">
             <h2 className="text-lg font-bold text-slate-800 mb-6 pb-3 border-b border-slate-100">
               Ringkasan Pesanan
             </h2>
@@ -146,19 +138,16 @@ const Cart = () => {
                 <span className="font-extrabold text-xl text-blue-600">{formattedTotal}</span>
               </div>
             </div>
+            
+            <button
+              onClick={() => navigate("/checkout")}
+              className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-4 rounded-2xl font-bold text-base hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg active:scale-95"
+            >
+              <ShoppingBag size={20} />
+              Lanjut ke Checkout
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Tombol Pesan Sekarang */}
-      <div className="mt-8">
-        <button
-          onClick={handleCheckout}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-4 rounded-2xl font-bold text-base hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg active:scale-95"
-        >
-          <ShoppingBag size={20} />
-          Pesan Sekarang
-        </button>
       </div>
     </div>
   );

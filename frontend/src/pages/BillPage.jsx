@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
-import { Download } from "lucide-react";
+import { Download, MapPin, CreditCard } from "lucide-react";
 
 const BillPage = () => {
   const { id } = useParams();
@@ -11,8 +11,10 @@ const BillPage = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   const state = location.state || {};
-  const orderedItems = state.orderedItems || [];
+  const orderedItems = state.items || [];
   const formattedTotal = state.formattedTotal || "Rp 0";
+  const address = state.address || "-";
+  const paymentMethod = state.paymentMethod || "-";
 
   useEffect(() => {
     if (orderedItems.length === 0) {
@@ -35,26 +37,31 @@ const BillPage = () => {
 
   const handleDownloadBill = () => {
     const doc = new jsPDF();
-    const date = new Date().toLocaleString();
+    const date = new Date().toLocaleString("id-ID");
 
     doc.setFontSize(16);
     doc.text("Karcis Pemesanan - CariMakan", 20, 20);
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.text(`Tanggal: ${date}`, 20, 30);
-    doc.text(`ID Pesanan: #${id}`, 20, 40);
+    doc.text(`ID Pesanan: #${id}`, 20, 36);
+    
+    doc.text(`Alamat Pengiriman: ${address}`, 20, 46);
+    doc.text(`Metode Pembayaran: ${paymentMethod}`, 20, 52);
 
-    let y = 60;
+    let y = 65;
     orderedItems.forEach((item) => {
       doc.text(`${item.strMeal} x${item.quantity} - Rp ${item.price * item.quantity}`, 20, y);
       y += 10;
     });
 
+    doc.setFontSize(12);
     doc.text(`Total Pembayaran: ${formattedTotal}`, 20, y + 10);
 
     if (qrCodeUrl) {
       doc.addImage(qrCodeUrl, "PNG", 150, 20, 40, 40);
     }
 
+    doc.setFontSize(10);
     doc.text("Terima kasih telah memesan di CariMakan!", 20, y + 30);
     doc.save(`Karcis_CariMakan_${id}.pdf`);
   };
@@ -64,7 +71,7 @@ const BillPage = () => {
   return (
     <div className="max-w-lg mx-auto px-4 py-10">
       <div className="bg-white rounded-2xl shadow-md p-6">
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 border-b border-slate-100 pb-6">
           <h1 className="text-2xl font-bold text-slate-800">Bill Pemesanan</h1>
           <p className="text-slate-500 text-sm mt-1">ID Pesanan: {id}</p>
         </div>
@@ -75,7 +82,25 @@ const BillPage = () => {
           </div>
         )}
 
-        <div className="space-y-4 mb-6">
+        <div className="bg-slate-50 rounded-xl p-4 mb-6 space-y-3 border border-slate-100">
+          <div className="flex items-start gap-3">
+            <MapPin size={18} className="text-blue-500 mt-0.5" />
+            <div>
+              <p className="text-xs text-slate-400 font-semibold mb-0.5">Alamat Pengiriman</p>
+              <p className="text-sm text-slate-700">{address}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 pt-3 border-t border-slate-200">
+            <CreditCard size={18} className="text-blue-500 mt-0.5" />
+            <div>
+              <p className="text-xs text-slate-400 font-semibold mb-0.5">Metode Pembayaran</p>
+              <p className="text-sm text-slate-700">{paymentMethod}</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 className="font-bold text-slate-800 text-sm mb-3">Detail Pesanan</h3>
+        <div className="space-y-3 mb-6">
           {orderedItems.map((item) => (
             <div key={item.idMeal} className="flex justify-between text-sm">
               <span className="text-slate-600">
@@ -95,7 +120,7 @@ const BillPage = () => {
 
         <button
           onClick={handleDownloadBill}
-          className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white py-3 rounded-xl font-semibold hover:bg-slate-900 transition-colors mb-3"
+          className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white py-3 rounded-xl font-semibold hover:bg-slate-900 transition-colors mb-3 shadow-md"
         >
           <Download size={18} />
           Download PDF
