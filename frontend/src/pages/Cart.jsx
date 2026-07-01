@@ -1,14 +1,11 @@
-import jsPDF from "jspdf";
-import QRCode from "qrcode";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";   // 🔹 tambahkan useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { ShoppingBag, Trash2, Plus, Minus, ArrowLeft, ShoppingCart } from "lucide-react";
-import html2canvas from "html2canvas";
 
 const Cart = () => {
-  const { cart, addToCart, removeFromCart, decreaseQty, cartCount } = useCart();
-  const navigate = useNavigate();   // 🔹 inisialisasi navigate
+  const { cart, addToCart, removeFromCart, decreaseQty, clearCart, cartCount } = useCart();
+  const navigate = useNavigate();
 
   const totalHarga = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const formattedTotal = new Intl.NumberFormat("id-ID", {
@@ -17,32 +14,9 @@ const Cart = () => {
     maximumFractionDigits: 0,
   }).format(totalHarga);
 
-  // ✅ Fungsi download bill PDF (opsional, bisa dipakai kalau mau)
-  const handleDownloadBill = async () => {
-    const doc = new jsPDF();
-    const date = new Date().toLocaleString();
-    const orderId = Math.floor(Math.random() * 100000);
-
-    doc.setFontSize(16);
-    doc.text("Karcis Pemesanan - CariMakan", 20, 20);
-    doc.setFontSize(12);
-    doc.text(`Tanggal: ${date}`, 20, 30);
-    doc.text(`ID Pesanan: #${orderId}`, 20, 40);
-
-    let y = 60;
-    cart.forEach((item) => {
-      doc.text(`${item.strMeal} x${item.quantity} - Rp ${item.price * item.quantity}`, 20, y);
-      y += 10;
-    });
-
-    doc.text(`Total Pembayaran: ${formattedTotal}`, 20, y + 10);
-
-    const qrData = `Pesanan #${orderId} - Total ${formattedTotal}`;
-    const qrImage = await QRCode.toDataURL(qrData);
-    doc.addImage(qrImage, "PNG", 150, 20, 40, 40);
-
-    doc.text("Terima kasih telah memesan di CariMakan!", 20, y + 30);
-    doc.save(`Karcis_CariMakan_${orderId}.pdf`);
+  const handleCheckout = () => {
+    navigate(`/karcis/${Date.now()}`, { state: { orderedItems: cart, totalHarga, formattedTotal } });
+    clearCart();
   };
 
   // ✅ Jika keranjang kosong
@@ -179,7 +153,7 @@ const Cart = () => {
       {/* Tombol Pesan Sekarang */}
       <div className="mt-8">
         <button
-          onClick={() => navigate(`/karcis/${Date.now()}`)}   // 🔹 ubah jadi navigasi ke halaman karcis
+          onClick={handleCheckout}
           className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-4 rounded-2xl font-bold text-base hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg active:scale-95"
         >
           <ShoppingBag size={20} />

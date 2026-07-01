@@ -68,7 +68,7 @@ const translateText = async (text) => {
 const translateIngredients = async (meal) => {
     const translatedMeal = { ...meal };
     const ingredientPromises = [];
-    
+
     for (let i = 1; i <= 20; i++) {
         const key = `strIngredient${i}`;
         if (meal[key] && meal[key].trim()) {
@@ -82,6 +82,11 @@ const translateIngredients = async (meal) => {
 };
 
 // ─── Endpoints ───────────────────────────────────────────────────────────────
+
+// Root endpoint untuk ngecek apakah server jalan (supaya tidak 404 di Vercel)
+app.get('/', (req, res) => {
+    res.json({ message: 'Backend Cari Makan API berjalan dengan baik!' });
+});
 
 // Cari makanan (tanpa terjemahan, cukup cepat)
 app.get('/api/foods/search', async (req, res) => {
@@ -124,7 +129,11 @@ app.get('/api/foods/:id', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server berjalan di port ${PORT}`);
-    console.log(`Terjemahan otomatis EN → ID aktif`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server berjalan di port ${PORT}`);
+        console.log(`Terjemahan otomatis EN → ID aktif`);
+    });
+}
+
+module.exports = app;
