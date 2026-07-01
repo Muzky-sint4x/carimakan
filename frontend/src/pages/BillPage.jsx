@@ -37,34 +37,104 @@ const BillPage = () => {
   }, [id, formattedTotal, orderedItems.length, navigate]);
 
   const handleDownloadBill = () => {
-    const doc = new jsPDF();
-    const date = new Date().toLocaleString("id-ID");
+    // Menghitung perkiraan tinggi kertas berdasarkan jumlah item dan alamat
+    const baseHeight = 130;
+    const itemHeight = orderedItems.length * 10;
+    const addressHeight = orderType === 'delivery' ? 20 : 0;
+    const totalHeight = baseHeight + itemHeight + addressHeight + (qrCodeUrl ? 40 : 0);
 
-    doc.setFontSize(16);
-    doc.text("Karcis Pemesanan - CariMakan", 20, 20);
-    doc.setFontSize(10);
-    doc.text(`Tanggal: ${date}`, 20, 30);
-    doc.text(`ID Pesanan: #${id}`, 20, 36);
-    
-    doc.text(`Alamat Pengiriman: ${address}`, 20, 46);
-    doc.text(`Metode Pembayaran: ${paymentMethod}`, 20, 52);
-
-    let y = 65;
-    orderedItems.forEach((item) => {
-      doc.text(`${item.strMeal} x${item.quantity} - Rp ${item.price * item.quantity}`, 20, y);
-      y += 10;
+    // Format kertas kasir (lebar 80mm)
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: [80, totalHeight]
     });
 
-    doc.setFontSize(12);
-    doc.text(`Total Pembayaran: ${formattedTotal}`, 20, y + 10);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Header
+    doc.setFont("courier", "bold");
+    doc.setFontSize(16);
+    doc.text("CARIMAKAN", pageWidth / 2, 12, { align: "center" });
+    
+    doc.setFontSize(9);
+    doc.setFont("courier", "normal");
+    doc.text("Jl. Sudirman No. 1, Jakarta", pageWidth / 2, 17, { align: "center" });
+    doc.text("Telp: 0812-3456-7890", pageWidth / 2, 21, { align: "center" });
+    
+    // Separator
+    doc.text("--------------------------------------", pageWidth / 2, 26, { align: "center" });
+    
+    // Order Info
+    doc.setFontSize(8);
+    doc.text(`WAKTU  : ${orderDate}`, 5, 32);
+    doc.text(`ORDER  : #${id}`, 5, 36);
+    doc.text(`TIPE   : ${orderType === 'pickup' ? 'Ambil Sendiri' : 'Delivery'}`, 5, 40);
+    doc.text(`METODE : ${paymentMethod}`, 5, 44);
 
-    if (qrCodeUrl) {
-      doc.addImage(qrCodeUrl, "PNG", 150, 20, 40, 40);
+    doc.text("--------------------------------------", pageWidth / 2, 49, { align: "center" });
+
+    // Items
+    let y = 55;
+    orderedItems.forEach((item) => {
+      doc.setFont("courier", "bold");
+      const name = item.strMeal.length > 20 ? item.strMeal.substring(0, 20) + "..." : item.strMeal;
+      doc.text(name.toUpperCase(), 5, y);
+      y += 4;
+      
+      doc.setFont("courier", "normal");
+      const qtyStr = `${item.quantity} x Rp ${new Intl.NumberFormat("id-ID").format(item.price)}`;
+      const subtotal = `Rp ${new Intl.NumberFormat("id-ID").format(item.price * item.quantity)}`;
+      
+      doc.text(qtyStr, 5, y);
+      doc.text(subtotal, pageWidth - 5, y, { align: "right" });
+      
+      y += 6;
+    });
+
+    doc.text("--------------------------------------", pageWidth / 2, y, { align: "center" });
+    y += 5;
+    
+    // Total
+    doc.setFont("courier", "bold");
+    doc.setFontSize(10);
+    doc.text("TOTAL", 5, y);
+    doc.text(formattedTotal, pageWidth - 5, y, { align: "right" });
+    
+    y += 5;
+    doc.setFont("courier", "normal");
+    doc.setFontSize(8);
+    doc.text("--------------------------------------", pageWidth / 2, y, { align: "center" });
+    y += 6;
+
+    // Address if delivery
+    if (orderType === 'delivery') {
+      doc.setFont("courier", "bold");
+      doc.text("ALAMAT PENGIRIMAN:", 5, y);
+      y += 4;
+      doc.setFont("courier", "normal");
+      
+      const splitAddress = doc.splitTextToSize(address, 70);
+      doc.text(splitAddress, 5, y);
+      y += (splitAddress.length * 4) + 2;
+      
+      doc.text("--------------------------------------", pageWidth / 2, y, { align: "center" });
+      y += 6;
     }
 
-    doc.setFontSize(10);
-    doc.text("Terima kasih telah memesan di CariMakan!", 20, y + 30);
-    doc.save(`Karcis_CariMakan_${id}.pdf`);
+    // QR Code
+    if (qrCodeUrl) {
+      const qrSize = 30;
+      const xPos = (pageWidth - qrSize) / 2;
+      doc.addImage(qrCodeUrl, "PNG", xPos, y, qrSize, qrSize);
+      y += qrSize + 5;
+    }
+
+    // Footer
+    doc.text("Terima kasih atas kunjungannya!", pageWidth / 2, y, { align: "center" });
+    doc.text("Layanan Pelanggan: cs@carimakan.id", pageWidth / 2, y + 4, { align: "center" });
+
+    doc.save(`Struk_CariMakan_${id}.pdf`);
   };
 
   if (orderedItems.length === 0) return null;
