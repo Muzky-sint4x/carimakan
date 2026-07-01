@@ -17,10 +17,10 @@ const Checkout = () => {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (cart.length === 0) {
+    if (cart.length === 0 && !isProcessing) {
       navigate("/keranjang");
     }
-  }, [cart, navigate]);
+  }, [cart, isProcessing, navigate]);
 
   if (cart.length === 0) return null;
 
