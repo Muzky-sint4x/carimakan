@@ -13,6 +13,7 @@ const Checkout = () => {
   const [email, setEmail] = useState("pengguna@carimakan.id");
   const [address, setAddress] = useState("Jakarta, Indonesia");
   const [paymentMethod, setPaymentMethod] = useState("Bayar di Tempat (COD)");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -33,32 +34,36 @@ const Checkout = () => {
 
   const handleConfirmOrder = (e) => {
     e.preventDefault();
-    const orderId = Date.now();
-    const orderDate = new Date().toLocaleString("id-ID");
-    
-    const finalAddress = orderType === 'delivery' ? address : "Ambil di Restoran (Pickup)";
+    setIsProcessing(true);
 
-    const newOrder = {
-      id: orderId,
-      date: orderDate,
-      items: cart,
-      totalHarga,
-      formattedTotal,
-      address: finalAddress,
-      paymentMethod,
-      orderType,
-      customerName: name,
-      customerEmail: email,
-      status: "Sedang Diproses"
-    };
+    setTimeout(() => {
+      const orderId = Date.now();
+      const orderDate = new Date().toLocaleString("id-ID");
+      
+      const finalAddress = orderType === 'delivery' ? address : "Ambil di Restoran (Pickup)";
 
-    // Simpan ke localStorage
-    const existingOrders = JSON.parse(localStorage.getItem("carimakan_orders")) || [];
-    localStorage.setItem("carimakan_orders", JSON.stringify([newOrder, ...existingOrders]));
+      const newOrder = {
+        id: orderId,
+        date: orderDate,
+        items: cart,
+        totalHarga,
+        formattedTotal,
+        address: finalAddress,
+        paymentMethod,
+        orderType,
+        customerName: name,
+        customerEmail: email,
+        status: "Sedang Diproses"
+      };
 
-    // Pindah ke halaman karcis
-    navigate(`/karcis/${orderId}`, { state: newOrder });
-    clearCart();
+      // Simpan ke localStorage
+      const existingOrders = JSON.parse(localStorage.getItem("carimakan_orders")) || [];
+      localStorage.setItem("carimakan_orders", JSON.stringify([newOrder, ...existingOrders]));
+
+      // Pindah ke halaman karcis
+      navigate(`/karcis/${orderId}`, { state: newOrder });
+      clearCart();
+    }, 1500); // Simulasi loading 1.5 detik
   };
 
   const paymentOptions = [
@@ -182,24 +187,53 @@ const Checkout = () => {
                 return (
                   <label 
                     key={option.id}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                    className={`flex flex-col gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                       isSelected ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100 hover:border-blue-200 bg-white'
                     }`}
                   >
-                    <div className={`p-3 rounded-xl ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
-                      <Icon size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <p className={`font-bold ${isSelected ? 'text-blue-800' : 'text-slate-800'}`}>{option.title}</p>
-                      <p className="text-sm text-slate-500 mt-0.5">{option.desc}</p>
-                    </div>
-                    <div className="flex-shrink-0 mr-2">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                        isSelected ? 'border-blue-600' : 'border-slate-300'
-                      }`}>
-                        {isSelected && <div className="w-3 h-3 rounded-full bg-blue-600" />}
+                    <div className="flex items-center gap-4">
+                      <div className={`p-3 rounded-xl ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
+                        <Icon size={24} />
+                      </div>
+                      <div className="flex-1">
+                        <p className={`font-bold ${isSelected ? 'text-blue-800' : 'text-slate-800'}`}>{option.title}</p>
+                        <p className="text-sm text-slate-500 mt-0.5">{option.desc}</p>
+                      </div>
+                      <div className="flex-shrink-0 mr-2">
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          isSelected ? 'border-blue-600' : 'border-slate-300'
+                        }`}>
+                          {isSelected && <div className="w-3 h-3 rounded-full bg-blue-600" />}
+                        </div>
                       </div>
                     </div>
+                    
+                    {/* Expanded Content untuk QRIS dan Transfer Bank */}
+                    {isSelected && option.id === "QRIS" && (
+                      <div className="mt-2 ml-16 mr-2 p-4 bg-white rounded-xl border border-slate-200 text-center animate-in fade-in zoom-in duration-300">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QRIS Mock" className="w-32 h-32 mx-auto mb-3 opacity-80 mix-blend-multiply" />
+                        <p className="text-sm font-semibold text-slate-700 mb-1">Scan untuk Membayar</p>
+                        <p className="text-xs text-slate-500">Mendukung GoPay, OVO, Dana, LinkAja, ShopeePay</p>
+                      </div>
+                    )}
+
+                    {isSelected && option.id === "Transfer Bank" && (
+                      <div className="mt-2 ml-16 mr-2 p-4 bg-white rounded-xl border border-slate-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <p className="text-sm font-semibold text-slate-700 mb-3">Pilih dan Transfer ke Rekening Berikut:</p>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span className="font-bold text-blue-800">BCA</span>
+                            <span className="font-mono text-slate-600 text-sm">1234 5678 90</span>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span className="font-bold text-blue-800">Mandiri</span>
+                            <span className="font-mono text-slate-600 text-sm">098 765 4321</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-4 text-center">a/n CariMakan Indonesia</p>
+                      </div>
+                    )}
+                    
                     <input 
                       type="radio" 
                       name="paymentMethod" 
@@ -262,10 +296,24 @@ const Checkout = () => {
               
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-4 rounded-2xl font-bold text-base hover:bg-blue-700 transition-all shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] active:scale-[0.98]"
+                disabled={isProcessing}
+                className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-base transition-all shadow-md active:scale-[0.98] ${
+                  isProcessing 
+                    ? 'bg-blue-400 text-white cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]'
+                }`}
               >
-                <CheckCircle size={20} />
-                Konfirmasi Pesanan
+                {isProcessing ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Memproses...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle size={20} />
+                    Konfirmasi Pesanan
+                  </>
+                )}
               </button>
             </div>
           </div>
