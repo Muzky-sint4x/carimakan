@@ -88,15 +88,15 @@ const Checkout = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-[#faf8f5] min-h-screen font-sans">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50/50 min-h-screen font-sans">
       <div className="flex items-center gap-4 mb-8">
         <Link 
           to="/keranjang"
           className="p-2 bg-white border border-slate-200 hover:bg-slate-50 rounded-full transition-colors shadow-sm"
         >
-          <ArrowLeft size={20} className="text-[#5c3012]" />
+          <ArrowLeft size={20} className="text-slate-700" />
         </Link>
-        <h1 className="text-3xl font-extrabold text-[#3a1d08]">Checkout Pesanan</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900">Checkout Pesanan</h1>
       </div>
 
       <form onSubmit={handleConfirmOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -105,16 +105,18 @@ const Checkout = () => {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Box Informasi Pemesan */}
-          <div className="bg-white rounded-3xl shadow-sm border border-orange-100/50 overflow-hidden">
-            <div className="p-6 border-b border-orange-50 flex items-center gap-3">
-              <User size={24} className="text-[#5c3012]" fill="currentColor" />
-              <h2 className="text-xl font-bold text-[#3a1d08]">Informasi Pemesan</h2>
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+              <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
+                <User size={20} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-800">Informasi Pemesan</h2>
             </div>
             
             <div className="p-6 space-y-6">
               {/* Tipe Pesanan */}
               <div>
-                <label className="block text-sm font-semibold text-[#5c3012] mb-3">Tipe Pesanan</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">Tipe Pesanan</label>
                 <div className="flex gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
@@ -123,9 +125,9 @@ const Checkout = () => {
                       value="delivery"
                       checked={orderType === "delivery"}
                       onChange={() => setOrderType("delivery")}
-                      className="w-5 h-5 text-[#7a431d] border-slate-300 focus:ring-[#7a431d]"
+                      className="w-5 h-5 text-blue-600 border-slate-300 focus:ring-blue-500"
                     />
-                    <span className="text-[#3a1d08] font-medium">Delivery (Antar)</span>
+                    <span className="text-slate-700 font-medium">Delivery (Antar)</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
@@ -134,35 +136,35 @@ const Checkout = () => {
                       value="pickup"
                       checked={orderType === "pickup"}
                       onChange={() => setOrderType("pickup")}
-                      className="w-5 h-5 text-[#7a431d] border-slate-300 focus:ring-[#7a431d]"
+                      className="w-5 h-5 text-blue-600 border-slate-300 focus:ring-blue-500"
                     />
-                    <span className="text-[#3a1d08] font-medium">Ambil di Tempat</span>
+                    <span className="text-slate-700 font-medium">Ambil di Tempat</span>
                   </label>
                 </div>
               </div>
 
               {/* Nama */}
               <div>
-                <label className="block text-sm font-semibold text-[#5c3012] mb-2">Nama Lengkap <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-orange-200/60 rounded-xl p-3 text-[#3a1d08] focus:ring-2 focus:ring-[#7a431d] focus:border-[#7a431d] outline-none transition-all"
+                  className="w-full border border-slate-200 rounded-xl p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                   placeholder="Masukkan nama lengkap"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-semibold text-[#5c3012] mb-2">Email <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Email <span className="text-red-500">*</span></label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-orange-200/60 rounded-xl p-3 text-[#3a1d08] focus:ring-2 focus:ring-[#7a431d] focus:border-[#7a431d] outline-none transition-all"
+                  className="w-full border border-slate-200 rounded-xl p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                   placeholder="nama@email.com"
                 />
               </div>
@@ -170,21 +172,21 @@ const Checkout = () => {
               {/* Alamat */}
               {orderType === "delivery" ? (
                 <div className="animate-in fade-in duration-300">
-                  <label className="block text-sm font-semibold text-[#5c3012] mb-2">Alamat Pengiriman <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Alamat Pengiriman <span className="text-red-500">*</span></label>
                   <textarea
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full border border-orange-200/60 rounded-xl p-3 text-[#3a1d08] focus:ring-2 focus:ring-[#7a431d] focus:border-[#7a431d] outline-none transition-all min-h-[100px] resize-y"
+                    className="w-full border border-slate-200 rounded-xl p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
                     placeholder="Contoh: Jl. Sudirman No. 123, RT 01/02, Jakarta Selatan"
                   ></textarea>
                 </div>
               ) : (
                 <div className="animate-in fade-in duration-300">
-                  <label className="block text-sm font-semibold text-[#5c3012] mb-2">Alamat Pengambilan (Toko)</label>
-                  <div className="bg-[#f7f0e6] p-4 rounded-xl border border-[#e8d5c4] flex items-center gap-2">
-                     <MapPin size={18} className="text-[#db2777]" fill="#db2777" color="white" />
-                     <p className="text-[#5c3012] font-medium">
+                  <label className="block text-sm font-semibold text-blue-800 mb-2">Alamat Pengambilan (Toko)</label>
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center gap-2">
+                     <MapPin size={18} className="text-blue-600" />
+                     <p className="text-slate-700 font-medium">
                        Jl. Makan Enak No. 123, Jakarta
                      </p>
                   </div>
@@ -194,10 +196,12 @@ const Checkout = () => {
           </div>
 
           {/* Box Metode Pembayaran */}
-          <div className="bg-white rounded-3xl shadow-sm border border-orange-100/50 overflow-hidden">
-            <div className="p-6 border-b border-orange-50 flex items-center gap-3">
-              <CreditCard size={24} className="text-[#5c3012]" />
-              <h2 className="text-xl font-bold text-[#3a1d08]">Metode Pembayaran</h2>
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+              <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
+                <CreditCard size={20} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-800">Metode Pembayaran</h2>
             </div>
             
             <div className="p-6 space-y-4">
@@ -208,11 +212,10 @@ const Checkout = () => {
                   <label 
                     key={option.id}
                     className={`flex flex-col gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                      isSelected ? 'border-[#7a431d] bg-[#f7f0e6]' : 'border-slate-100 hover:border-orange-200 bg-white'
+                      isSelected ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100 hover:border-blue-200 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      {/* Placeholder Icon to match screenshot closely */}
                       <div className="w-10 h-10 flex items-center justify-center">
                          {option.id === "QRIS" && <div className="bg-indigo-600 text-white rounded p-1.5"><Smartphone size={20}/></div>}
                          {option.id === "Transfer Bank" && <div className="bg-slate-200 text-slate-700 rounded-full p-2"><Building size={20}/></div>}
@@ -220,14 +223,14 @@ const Checkout = () => {
                       </div>
                       
                       <div className="flex-1">
-                        <p className={`font-bold ${isSelected ? 'text-[#3a1d08]' : 'text-slate-800'}`}>{option.title}</p>
-                        <p className={`text-sm ${isSelected ? 'text-[#7a431d]' : 'text-slate-500'}`}>{option.desc}</p>
+                        <p className={`font-bold ${isSelected ? 'text-blue-800' : 'text-slate-800'}`}>{option.title}</p>
+                        <p className={`text-sm ${isSelected ? 'text-slate-600' : 'text-slate-500'}`}>{option.desc}</p>
                       </div>
                       <div className="flex-shrink-0 mr-2">
                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                          isSelected ? 'border-[#7a431d]' : 'border-slate-300'
+                          isSelected ? 'border-blue-600' : 'border-slate-300'
                         }`}>
-                          {isSelected && <div className="w-3 h-3 rounded-full bg-[#7a431d]" />}
+                          {isSelected && <div className="w-3 h-3 rounded-full bg-blue-600" />}
                         </div>
                       </div>
                     </div>
@@ -250,10 +253,12 @@ const Checkout = () => {
 
         {/* Kolom Kanan: Ringkasan Pesanan */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-3xl shadow-sm border border-orange-100/50 overflow-hidden sticky top-24">
-            <div className="p-6 border-b border-orange-50 flex items-center gap-3">
-              <ShoppingBag size={24} className="text-[#5c3012]" fill="currentColor" />
-              <h2 className="text-xl font-bold text-[#3a1d08]">Ringkasan Pesanan</h2>
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden sticky top-24">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+              <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
+                <ShoppingBag size={20} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-800">Ringkasan Pesanan</h2>
             </div>
             
             <div className="p-6">
@@ -262,9 +267,9 @@ const Checkout = () => {
                   <div key={item.idMeal} className="flex gap-4 items-center">
                     <img src={item.strMealThumb} alt={item.strMeal} className="w-16 h-16 rounded-xl object-cover" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-[#3a1d08] line-clamp-1">{item.strMeal}</p>
+                      <p className="font-semibold text-slate-800 line-clamp-1">{item.strMeal}</p>
                       <p className="text-sm text-slate-500 mb-1">x{item.quantity}</p>
-                      <p className="font-bold text-[#7a431d] text-sm">
+                      <p className="font-bold text-blue-600 text-sm">
                         {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(item.price * item.quantity)}
                       </p>
                     </div>
@@ -275,17 +280,17 @@ const Checkout = () => {
               <div className="border-t border-slate-100 pt-4 space-y-3 mb-6">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500">Total Item</span>
-                  <span className="font-semibold text-[#3a1d08]">{totalItems} porsi</span>
+                  <span className="font-semibold text-slate-800">{totalItems} porsi</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500">Metode</span>
-                  <span className="font-semibold text-[#3a1d08] truncate max-w-[150px] text-right" title={paymentMethod}>
+                  <span className="font-semibold text-slate-800 truncate max-w-[150px] text-right" title={paymentMethod}>
                     {paymentMethod === 'Bayar di Tempat (COD)' ? 'COD' : paymentMethod}
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-3 border-t border-slate-100">
-                  <span className="font-bold text-[#3a1d08] text-lg">Total Bayar</span>
-                  <span className="font-extrabold text-2xl text-[#7a431d]">{formattedTotal}</span>
+                  <span className="font-bold text-slate-800 text-lg">Total Bayar</span>
+                  <span className="font-extrabold text-2xl text-blue-600">{formattedTotal}</span>
                 </div>
               </div>
               
@@ -294,8 +299,8 @@ const Checkout = () => {
                 disabled={isProcessing && !showQRISModal}
                 className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-base transition-all shadow-md active:scale-[0.98] ${
                   isProcessing && !showQRISModal
-                    ? 'bg-[#cba88c] text-white cursor-not-allowed' 
-                    : 'bg-[#7a431d] text-white hover:bg-[#5c3012] shadow-[0_4px_14px_0_rgba(122,67,29,0.39)]'
+                    ? 'bg-blue-400 text-white cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]'
                 }`}
               >
                 {isProcessing && !showQRISModal ? (
@@ -318,23 +323,23 @@ const Checkout = () => {
 
       {/* QRIS Modal Popup */}
       {showQRISModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative animate-in zoom-in-95 duration-300">
             
-            <h2 className="text-3xl font-extrabold text-[#3a1d08] mb-1">Scan QRIS</h2>
-            <p className="text-[#7a431d] mb-6">Total Tagihan: <strong className="font-bold">{formattedTotal}</strong></p>
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-1">Scan QRIS</h2>
+            <p className="text-blue-600 mb-6">Total Tagihan: <strong className="font-bold">{formattedTotal}</strong></p>
 
-            <div className="bg-white border-2 border-[#7a431d] rounded-2xl p-4 inline-block mb-6 mx-auto">
+            <div className="bg-white border-2 border-blue-600 rounded-2xl p-4 inline-block mb-6 mx-auto">
               {qrisUrl ? (
                 <img src={qrisUrl} alt="QRIS" className="w-48 h-48 object-contain" />
               ) : (
                 <div className="w-48 h-48 flex items-center justify-center bg-slate-50 animate-pulse">
-                  <div className="w-8 h-8 border-4 border-[#7a431d]/30 border-t-[#7a431d] rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin" />
                 </div>
               )}
             </div>
 
-            <p className="text-[#5c3012] text-sm mb-6 px-4">
+            <p className="text-slate-600 text-sm mb-6 px-4">
               Buka aplikasi m-banking atau e-wallet Anda (Gopay, OVO, Dana) dan scan kode di atas.
             </p>
 
@@ -343,7 +348,7 @@ const Checkout = () => {
                 onClick={processOrder}
                 disabled={isProcessing}
                 className={`w-full py-4 rounded-xl font-bold text-white transition-all ${
-                  isProcessing ? 'bg-[#cba88c] cursor-not-allowed' : 'bg-[#7a431d] hover:bg-[#5c3012]'
+                  isProcessing ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                 }`}
               >
                 {isProcessing ? "Memproses..." : "Saya Sudah Bayar"}
@@ -354,7 +359,7 @@ const Checkout = () => {
                   if (!isProcessing) setShowQRISModal(false);
                 }}
                 disabled={isProcessing}
-                className="w-full py-4 rounded-xl font-bold text-[#cba88c] hover:text-[#7a431d] transition-colors bg-transparent"
+                className="w-full py-4 rounded-xl font-bold text-slate-400 hover:text-slate-600 transition-colors bg-transparent"
               >
                 Batal / Ubah Metode
               </button>
