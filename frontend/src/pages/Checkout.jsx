@@ -155,7 +155,7 @@ const Checkout = () => {
               </div>
 
               {/* Alamat */}
-              {orderType === "delivery" && (
+              {orderType === "delivery" ? (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Alamat Pengiriman <span className="text-red-500">*</span></label>
                   <textarea
@@ -165,6 +165,17 @@ const Checkout = () => {
                     className="w-full border border-slate-200 rounded-xl p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
                     placeholder="Contoh: Jl. Sudirman No. 123, RT 01/02, Jakarta Selatan"
                   ></textarea>
+                </div>
+              ) : (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                  <label className="block text-sm font-bold text-blue-800 mb-1">Alamat Pengambilan (Toko)</label>
+                  <p className="text-slate-700 text-sm">
+                    <strong>CariMakan Resto</strong><br/>
+                    Jl. Sudirman No. 1, RT 01/RW 02, Jakarta Selatan, 12190
+                  </p>
+                  <p className="text-xs text-blue-600 mt-2 font-semibold bg-white inline-block px-2 py-1 rounded-md">
+                    * Bayar di kasir saat mengambil makanan
+                  </p>
                 </div>
               )}
             </div>
